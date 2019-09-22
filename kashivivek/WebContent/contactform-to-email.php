@@ -1,4 +1,5 @@
 <?php
+if(!empty($_POST['websitekashivivek'])) die();
 if (isset($_POST["websitekashivivek"]) && $_POST["websitekashivivek"] == "") {
 
     $name = $_POST['name'];
@@ -16,7 +17,8 @@ if (isset($_POST["websitekashivivek"]) && $_POST["websitekashivivek"] == "") {
     // Send the email!
     mail($to, $email_subject, $email_body, $headers);
     // done. redirect to thank-you page.
-    header('Location: index.html');
+    $message = "Your message has been sent! Thank you!";
+    echo "<script type='text/javascript'>alert('$message');window.location = 'http://www.kashivivek.com';</script>";
 } else {
     http_response_code(400);
     exit();
