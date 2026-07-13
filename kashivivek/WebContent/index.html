@@ -8,7 +8,7 @@
 	<meta name="description" content="Portfolio - Vivek." />
 	<meta name="keywords" content="kashivivek, kashi vivek budda, kashi, vivek, budda, android, portfolio" />
 	<meta name="author" content="Vivek" />
-	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/main.css?v=1.1" />
 	<link rel="shortcut icon" type="image/png" href="images/fav.png" />
 	<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"
 		integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
@@ -30,6 +30,9 @@
 </head>
 
 <body>
+
+	<!-- Ripple Background -->
+	<div id="ripple-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background-image: url('images/bg.jpg'); background-size: cover; background-position: center; background-color: #e1e6e1;"></div>
 
 	<!-- Page Wrapper -->
 	<div id="page-wrapper">
@@ -81,12 +84,7 @@
 				<div class="content span-7">
 					<h2 class="major">Software Professional</h2>
 					<p>
-						<strong>Extensive Experience in Development Operations,
-							Android Application programming, designing User Interface (UI)
-							applications and professional web applications using Android,
-							Java, JavaScript, jQuery, HTML5, CSS3, AngularJS, PHP, Continuous
-							Integration Tools like Jenkins, Hudson, Maven, GIT, Sonar, Shell
-							Scripting.</strong>
+						<strong>Senior Systems & Infrastructure Engineer with over 10 years of experience designing and deploying scalable applications. Currently pursuing a Ph.D. in IT, with deep expertise in enterprise architectures using Java, Spring Boot, and modern databases. Proficient in driving system stability through CI/CD and DevOps practices. Recently designed and architected an internal AI chat tool, unifying LLMs (such as LangChain) with core platform systems to modernize business workflows.</strong>
 					</p>
 				</div>
 				<div class="image filtered tinted" data-position="top left">
@@ -103,14 +101,31 @@
 						solutions, code analysis, architecting and many more.</p>
 				</div>
 				<div class="inner">
+					<header>
+						<p style="text-align: center; font-style: italic; margin-bottom: 2em; opacity: 0.8;">Click on the projects below to view details</p>
+					</header>
 					<ul class="grid-icons three connected">
+						<li>
+							<span class="icon custom-image project-card" data-project="1" style="cursor: pointer;">
+								<img src="images/project1.png" alt="Niyan" />
+								<span class="label">Niyan</span>
+							</span>
+						</li>
+						<li>
+							<span class="icon custom-image project-card" data-project="2" style="cursor: pointer;">
+								<img src="images/project2.png" alt="TTT" />
+								<span class="label">TTT</span>
+							</span>
+						</li>
+						<li>
+							<span class="icon custom-image project-card" data-project="3" style="cursor: pointer;">
+								<img src="images/project3.png" alt="GetIt App" />
+								<span class="label">GetIt App</span>
+							</span>
+						</li>
 						<li><span class="icon fa-code"><span class="label">Coding</span></span></li>
 						<li><span class="icon fa-camera-retro"><span class="label">Photography</span></span></li>
-						<li><span class="icon fa-cog"><span class="label">Architecturing</span></span></li>
-						<li><span class="icon fa-paper-plane"><span class="label">Planning</span></span></li>
 						<li><span class="icon fa-bar-chart"><span class="label">Analysis</span></span></li>
-						<li><span class="icon fa-diamond"><span class="label">Increase
-									Revenue</span></span></li>
 					</ul>
 				</div>
 			</section>
@@ -223,8 +238,71 @@
 
 	<!-- Scripts -->
 	<script src="assets/js/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.ripples/0.5.3/jquery.ripples.min.js"></script>
 	<script src="assets/js/skel.min.js"></script>
 	<script src="assets/js/main.js"></script>
+
+	<!-- Project Modal Overlay -->
+	<div id="project-modal" class="project-modal-overlay">
+		<div class="project-modal-content mac-window">
+			<div class="mac-header">
+				<div class="mac-buttons">
+					<span class="mac-btn close" id="mac-close"></span>
+					<span class="mac-btn minimize"></span>
+					<span class="mac-btn maximize"></span>
+				</div>
+				<div class="mac-title" id="mac-window-title">Project Details</div>
+			</div>
+			
+			<div class="mac-body">
+				<div class="mac-title-container">
+					<div class="mac-title-text">
+						<h2 id="modal-title" class="mac-hero-title">Project Title</h2>
+						<p id="modal-subtitle" class="mac-subtitle"></p>
+					</div>
+					<div class="mac-title-action" id="modal-actions-container" style="display: flex; flex-direction: column; gap: 10px;">
+						<!-- Buttons injected via JS -->
+					</div>
+				</div>
+				
+				<div id="modal-meta" class="mac-meta-grid">
+					<div class="meta-item">
+						<strong>Role</strong>
+						<span id="modal-role"></span>
+					</div>
+					<div class="meta-item">
+						<strong>Year</strong>
+						<span id="modal-year"></span>
+					</div>
+					<div class="meta-item">
+						<strong>Project type</strong>
+						<span id="modal-type"></span>
+					</div>
+					<div class="meta-item">
+						<strong>Credits</strong>
+						<span id="modal-credits"></span>
+					</div>
+				</div>
+				
+				<div class="mac-long-desc" id="modal-desc">
+					<!-- Long description / markdown goes here -->
+				</div>
+				
+				<div id="modal-gallery-section" style="display: none; margin-top: 2em;">
+					<h2>Gallery</h2>
+					<div class="mac-gallery" id="modal-gallery-container">
+						<!-- Thumbnails will be injected here -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Image Lightbox Overlay -->
+	<div id="image-lightbox" class="lightbox-overlay">
+		<span class="lightbox-close">&times;</span>
+		<img id="lightbox-img" src="" alt="Enlarged screenshot" />
+	</div>
 
 </body>
 

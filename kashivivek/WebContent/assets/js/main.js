@@ -87,6 +87,28 @@
 					$bodyHtml = $('body,html'),
 					$wrapper = $('#wrapper');
 
+			// Initialize Water Ripple Effect on the background layer
+			var $rippleBg = $('#ripple-bg');
+			try {
+				$rippleBg.ripples({
+					resolution: 512,
+					dropRadius: 20,
+					perturbance: 0.04
+				});
+
+				// Forward mouse movements to trigger ripples since the element is behind the content
+				$document.on('mousemove', function(e) {
+					// Add a subtle drop wherever the mouse moves
+					$rippleBg.ripples('drop', e.clientX, e.clientY, 10, 0.01);
+				});
+				$document.on('click', function(e) {
+					// Add a larger drop on click
+					$rippleBg.ripples('drop', e.clientX, e.clientY, 30, 0.06);
+				});
+			} catch (e) {
+				console.log('Ripples effect could not be initialized:', e);
+			}
+
 			// Disable animations/transitions until the page has loaded.
 				$body.addClass('is-loading');
 
@@ -753,6 +775,181 @@
 
 							});
 
+		});
+
+	// Project Modal Logic
+		$(function() {
+			var projectsData = {
+				'1': {
+					title: 'Niyan',
+					subtitle: 'Premium, cross-platform property management application',
+					role: 'Architect & Developer',
+					year: '2026 - Now',
+					projectType: 'Mobile & Web App',
+					credits: 'Flutter, Firebase',
+					desc: '<h2>Overview</h2><p>Niyan is designed to help landlords streamline their operations, track revenue, and manage tenant relationships with ease. Built with Flutter and Firebase, Niyan offers a reactive and intuitive experience across Android, iOS, and Web.</p><h2>Features</h2><ul><li><strong>Modern Dashboard:</strong> Get a bird\'s-eye view of your property portfolio, including occupancy rates, monthly revenue, and pending tasks.</li><li><strong>Property & Unit Management:</strong> Organize your properties into units with detailed status tracking (Occupied, Vacant, Maintenance).</li><li><strong>Tenant Ledger:</strong> Maintain a complete history of tenants, their contact information, and lease agreements.</li><li><strong>Smart Rent Notifications:</strong> Never miss a payment again. Landlords get automated reminders about upcoming and overdue rent.</li><li><strong>Financial Tracking:</strong> A robust transaction system to track income and expenses per property.</li></ul>',
+					links: [
+						{ url: 'https://github.com/kashivivek/niyan', text: 'View GitHub', icon: 'fa-github' },
+						{ url: 'https://play.google.com/store/apps/details?id=com.kashivivek.niyan&hl=en_US', text: 'Download App', icon: 'fa-android' }
+					],
+					images: [
+						'images/project1/2.png',
+						'images/project1/3.png',
+						'images/project1/4.png',
+						'images/project1/5.png',
+						'images/project1/6.png',
+						'images/project1/7.png'
+					]
+				},
+				'2': {
+					title: 'TV Time Tracker (TTT)',
+					subtitle: 'Sleek, modern web application for tracking TV shows and movies',
+					role: 'Architect & Developer',
+					year: '2026 - Now',
+					projectType: 'Web Application',
+					credits: 'TMDB API',
+					desc: '<h2>Overview</h2><p>TV Time Tracker is designed to help you organize, track, and manage your TV shows and movies. Built as a powerful alternative to existing tracking platforms, it offers lightning-fast syncing, deep TMDB integration, and a premium user interface.</p><h2>Features</h2><ul><li><strong>Seamless Watch Tracking:</strong> Keep track of the exact season and episode you are on with one-click season-level watching.</li><li><strong>TV Time Zip Import:</strong> Moving platforms? Easily upload your exported TV Time .zip archive. The engine will intelligently resolve your history.</li><li><strong>Smart Upcoming Episodes:</strong> Never miss a release. Unreleased episodes and returning seasons are parsed automatically.</li><li><strong>Interactive Dashboard:</strong> A dynamic dashboard that sorts your watchlist into Current Shows, Not Watched Recently, Upcoming, and Completed.</li><li><strong>Zero API Lag:</strong> Background syncing guarantees that your dashboard loads instantaneously.</li></ul>',
+					links: [
+						{ url: 'https://github.com/kashivivek/TTT', text: 'View GitHub', icon: 'fa-github' },
+						{ url: 'https://www.tvtime.online/', text: 'Visit Website', icon: 'fa-external-link' }
+					],
+					images: [
+						'images/project2/1.png',
+						'images/project2/2.png',
+						'images/project2/3.png',
+						'images/project2/4.png'
+					]
+				},
+				'3': {
+					title: 'GetIt App',
+					subtitle: 'Consumer-facing mobile application on Google Play',
+					role: 'Architect & Developer',
+					year: '2015 - Now',
+					projectType: 'Mobile App',
+					credits: 'Android Studio',
+					desc: '<p>A consumer-facing mobile application available on the Google Play Store. Built to provide users with a seamless and intuitive mobile experience with optimized performance and engaging UI/UX.</p>',
+					links: [
+						{ url: 'https://github.com/kashivivek/Get-it', text: 'View GitHub', icon: 'fa-github' },
+						{ url: 'https://play.google.com/store/apps/details?id=com.getit.getit.yes&hl=en_US', text: 'Download App', icon: 'fa-android' }
+					],
+					images: [
+						'images/project3/unnamed.webp',
+						'images/project3/unnamed (1).webp',
+						'images/project3/unnamed (2).webp',
+						'images/project3/unnamed (3).webp',
+						'images/project3/unnamed (4).webp',
+						'images/project3/unnamed (5).webp'
+					]
+				}
+			};
+
+			var $modalOverlay = $('#project-modal');
+			var $modalTitle = $('#modal-title');
+			var $modalSubtitle = $('#modal-subtitle');
+			var $modalRole = $('#modal-role');
+			var $modalYear = $('#modal-year');
+			var $modalType = $('#modal-type');
+			var $modalCredits = $('#modal-credits');
+			var $modalDesc = $('#modal-desc');
+			var $modalImagesContainer = $('#modal-gallery-container');
+			var $modalGallerySection = $('#modal-gallery-section');
+			var $modalActionsContainer = $('#modal-actions-container');
+
+			var $lightboxOverlay = $('#image-lightbox');
+			var $lightboxImg = $('#lightbox-img');
+
+			// Open modal on card click
+			$('.project-card').on('click', function(e) {
+				e.preventDefault();
+				var projectId = $(this).data('project');
+				var data = projectsData[projectId];
+
+				if (data) {
+					$modalTitle.text(data.title);
+					$modalSubtitle.text(data.subtitle);
+					$modalRole.text(data.role);
+					$modalYear.text(data.year);
+					$modalType.text(data.projectType);
+					$modalCredits.text(data.credits);
+					$modalDesc.html(data.desc);
+
+					// Render multiple links
+					$modalActionsContainer.empty();
+					if (data.links && data.links.length > 0) {
+						data.links.forEach(function(linkData) {
+							var $link = $('<a href="' + linkData.url + '" class="button icon ' + linkData.icon + ' mac-btn-black" target="_blank" style="width: 100%; text-align: center;">' + linkData.text + '</a>');
+							$modalActionsContainer.append($link);
+						});
+					}
+
+					// Handle images array
+					$modalImagesContainer.empty();
+					if (data.images && data.images.length > 0) {
+						$modalGallerySection.show();
+						data.images.forEach(function(imgSrc) {
+							var $img = $('<img src="' + imgSrc + '" alt="Gallery thumbnail" />');
+							$img.on('click', function() {
+								$lightboxImg.attr('src', imgSrc);
+								$lightboxOverlay.addClass('active');
+							});
+							$modalImagesContainer.append($img);
+						});
+					} else {
+						$modalGallerySection.hide();
+					}
+
+					$modalOverlay.addClass('active');
+					$('html, body').addClass('modal-open');
+					
+					// Pause scroll zone so background doesn't move
+					$('#wrapper').triggerHandler('---pauseScrollZone');
+				}
+			});
+
+			// Close lightbox
+			$('.lightbox-close, #image-lightbox').on('click', function(e) {
+				if (e.target === this) {
+					$lightboxOverlay.removeClass('active');
+				}
+			});
+
+			// Close modal on 'X' click, mac close button, or overlay click
+			$('#mac-close, .project-modal-overlay').on('click', function(e) {
+				if (e.target === this) {
+					$modalOverlay.removeClass('active');
+					$('html, body').removeClass('modal-open');
+				}
+			});
+
+			// Prevent background scrolling when scrolling inside the modal
+			$modalOverlay.on('wheel touchmove', function(e) {
+				// Stop the event from bubbling up to the body's horizontal scroll handler
+				e.stopPropagation();
+
+				// If we are scrolling inside the .mac-body (the scrollable area), let it scroll
+				if ($(e.target).closest('.mac-body').length > 0) {
+					var $macBody = $(e.target).closest('.mac-body');
+					var scrollTop = $macBody.scrollTop();
+					var scrollHeight = $macBody[0].scrollHeight;
+					var height = $macBody.outerHeight();
+					var delta = e.originalEvent.wheelDelta || -e.originalEvent.deltaY || -e.originalEvent.detail;
+
+					// If scrolling up and at the top, or scrolling down and at the bottom, prevent default
+					if ((scrollTop === 0 && delta > 0) || (scrollTop + height >= scrollHeight && delta < 0)) {
+						e.preventDefault();
+					}
+					// Otherwise, let it scroll normally
+				} else {
+					// Scrolling outside the .mac-body (e.g. on the overlay itself), prevent default to stop background scroll
+					e.preventDefault();
+				}
+			});
+
+			$modalOverlay.on('click', function(e) {
+				if ($(e.target).is('.project-modal-overlay')) {
+					$modalOverlay.removeClass('active');
+				}
+			});
 		});
 
 })(jQuery);
